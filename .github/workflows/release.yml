@@ -11,7 +11,7 @@ jobs:
     permissions:
       contents: write
     env:
-      PACKED_JS_PATH: "dist/main.js"
+      PACKED_JS_PATH: "dist/index.js"
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
