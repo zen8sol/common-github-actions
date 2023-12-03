@@ -16,7 +16,7 @@ const main = async () => {
     );
     const newVersionInput: string = getInput("newVersion");
     const repository = context.payload.repository.owner.login+'/'+context.payload.repository.name;
-    const releaseDate:string = process.env.TODAY_DATE ?? context.payload. LocalDate.now(ZoneOffset.UTC).toString();
+    const releaseDate:string = process.env.TODAY_DATE ?? LocalDate.now(ZoneOffset.UTC).toString();
 
     let changelogLines: string[] = getFileLines(changelogFilePath);
 
