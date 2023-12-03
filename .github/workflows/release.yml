@@ -14,6 +14,12 @@ jobs:
       PACKED_JS_PATH: "dist/index.js"
     runs-on: ubuntu-latest
     steps:
+      - name: Check Semver
+        run: |
+          if ! [[ ${{ inputs.newVersion }} =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            echo Invalid semversion input: ${{ inputs.newVersion }}
+            exit 1
+          fi
       - name: Checkout
         uses: actions/checkout@v3
       - name: Setup Node.js
@@ -44,4 +50,4 @@ jobs:
       - name: Push packed js
         if: steps.commitPackedJs.outcome == 'success'
         run: |
-          git tag ${{ github.event.inputs.newVersion }} && git push --follow-tags --tags
+          git tag ${{ inputs.newVersion }} && git push --follow-tags --tags
