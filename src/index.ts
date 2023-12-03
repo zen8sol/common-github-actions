@@ -16,13 +16,13 @@ const main = async () => {
     );
     const newVersionInput: string = getInput("newVersion");
     const repository = context.payload.repository.owner.login+'/'+context.payload.repository.name;
-    const dateString = process.env.TODAY_DATE ?? context.payload. LocalDate.now(ZoneOffset.UTC).toString();
+    const releaseDate:string = process.env.TODAY_DATE ?? context.payload. LocalDate.now(ZoneOffset.UTC).toString();
 
     let changelogLines: string[] = getFileLines(changelogFilePath);
 
     const newVersionChangesReplaces = [
       "## [Unreleased]\n",
-      `## [${newVersionInput}] - ${dateString}`,
+      `## [${newVersionInput}] - ${releaseDate}`,
     ].join("\n");
 
     for (let i = 0; i < changelogLines.length; i++) {
