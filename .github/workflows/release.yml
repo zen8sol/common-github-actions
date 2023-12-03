@@ -16,7 +16,7 @@ jobs:
     steps:
       - name: Check Semver
         run: |
-          if ! [[ ${{ inputs.newVersion }} =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+          if ! [[ '${{ inputs.newVersion }}' =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
             echo Invalid semversion input: ${{ inputs.newVersion }}
             exit 1
           fi
@@ -46,8 +46,8 @@ jobs:
           git add ${{ env.PACKED_JS_PATH }}
           git add dist/licenses.txt
           git add dist/package.json
-          git commit -m "Pack with dependencies to ${{ env.PACKED_JS_PATH }}"
+          git commit -m "build: new version pack ${{ inputs.newVersion }}"
       - name: Push packed js
         if: steps.commitPackedJs.outcome == 'success'
         run: |
-          git tag ${{ inputs.newVersion }} && git push --follow-tags --tags
+          git tag -m 'new version' '${{ inputs.newVersion }}' && git push --follow-tags
