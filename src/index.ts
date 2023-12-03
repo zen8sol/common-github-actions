@@ -11,7 +11,7 @@ function getFileLines(filePath: string): string[] {
 const main = async () => {
   try {
     const changelogFilePath = path.join(
-      process.env.RUNNER_TEMP,
+      process.env.GITHUB_WORKSPACE,
       "CHANGELOG.md"
     );
     const newVersionInput: string = getInput("newVersion");

@@ -24,17 +24,17 @@ const options = RunOptions.create()
     },
   })
   .setTempDir(tmpDir)
-  .setWorkspaceDir('./tmp/workspace')
-  .setFakeFsOptions({ rmFakedTempDirAfterRun: false });
+  .setWorkspaceDir(`${tmpDir}/workspace`)
+  .setFakeFsOptions({ rmFakedTempDirAfterRun: false, rmFakedWorkspaceDirAfterRun: false });
 
 describe("main", () => {
   beforeEach(async () => {
     rmSync(tmpDir, { force: true, recursive: true });
-    mkdirSync(tmpDir);
+    mkdirSync(`${tmpDir}/workspace`, {recursive:true});
   });
 
   test("should update changelog", async () => {
-    const tmpChangelogFilePath = path.join(tmpDir, "CHANGELOG.md");
+    const tmpChangelogFilePath = path.join('tmp/workspace', "CHANGELOG.md");
 
     writeFileSync(
       tmpChangelogFilePath,
