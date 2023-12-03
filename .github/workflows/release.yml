@@ -27,7 +27,7 @@ jobs:
         run: npm run build
       - name: Check packed js changes
         id: packedJsStatus
-        run: echo ::set-output name=changes::$(git status ${{ env.PACKED_JS_PATH }} --porcelain)
+        run: echo "changes=$(git status ${{ env.PACKED_JS_PATH }} --porcelain)" >> "$GITHUB_OUTPUT"
       - name: test
         if: steps.packedJsStatus.outputs.changes
         run: npm run test

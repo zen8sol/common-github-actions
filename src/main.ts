@@ -14,7 +14,7 @@ const main = async () => {
       process.env.RUNNER_TEMP,
       "CHANGELOG.md"
     );
-    const newVersion: string = getInput("newVersion");
+    const newVersionInput: string = getInput("newVersion");
     const repository = context.payload.repository.owner.login+'/'+context.payload.repository.name;
     const dateString = LocalDate.now(ZoneOffset.UTC).toString();
 
@@ -22,7 +22,7 @@ const main = async () => {
 
     const newVersionChangesReplaces = [
       "## [Unreleased]\n",
-      `## [${newVersion}] - ${dateString}`,
+      `## [${newVersionInput}] - ${dateString}`,
     ].join("\n");
 
     for (let i = 0; i < changelogLines.length; i++) {
@@ -36,8 +36,8 @@ const main = async () => {
       if (changelogLines[i].startsWith("[unreleased]")) {
         let oldVersion = changelogLines[i + 1].split(" ", 1)[0].slice(1, -1);
         changelogLines[i] = [
-          `[unreleased] https://github.com/${repository}/compare/${newVersion}...HEAD`,
-          `[${newVersion}] https://github.com/${repository}/compare/${oldVersion}...${newVersion}`,
+          `[unreleased] https://github.com/${repository}/compare/${newVersionInput}...HEAD`,
+          `[${newVersionInput}] https://github.com/${repository}/compare/${oldVersion}...${newVersionInput}`,
         ].join("\n");
       }
     }
