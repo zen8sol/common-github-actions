@@ -2,8 +2,8 @@ name: "release"
 on:
   workflow_dispatch:
     inputs:
-      version:
-        description: "next action version"
+      newVersion:
+        description: "New Version"
         required: true
         type: string
 jobs:
