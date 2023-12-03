@@ -8,8 +8,8 @@
   "license": "MIT",
   "scripts": {
     "build": "rm -fr dist && npm exec --package=@vercel/ncc -- ncc build -o dist -m -t --no-source-map-register -C --license licenses.txt src/index.ts",
-
-    "test": "npm run build && vitest --run && ! [ $CI ] && rm -fr dist"
+    "test": "vitest --run",
+    "test-local": "npm run build && npm run test && rm -fr dist"
   },
   "devDependencies": {
     "@types/node": "^20.10.0",
