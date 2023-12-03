@@ -1,0 +1,10 @@
+name: 'Update changelog'
+description: 'Updates changelog based on format: [Keep a Changelog]'
+inputs:
+  newVersion:
+    description: 'New version of project'
+    required: true
+    default: ''
+runs:
+  using: 'node20'
+  main: 'dist/main.js'
