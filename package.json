@@ -7,8 +7,8 @@
   "author": "Andrzej Wasiak",
   "license": "MIT",
   "scripts": {
-    "build": "rm -fr dist && ./node_modules/.bin/ncc build src/index.ts -o dist -m -C --license licenses.txt",
-    "test": "vitest --run"
+    "build": "rm -fr dist && npm exec --package=@vercel/ncc -- ncc build -o dist -m -t --no-source-map-register -C --license licenses.txt src/index.ts",
+    "test": "npm run build && vitest --run && rm -fr dist"
   },
   "devDependencies": {
     "@types/node": "^20.10.0",

@@ -14,6 +14,9 @@ const options = RunOptions.create()
     oldVersion: "1.0.1",
     newVersion: "1.1.0",
   })
+  .setEnv({
+    TODAY_DATE: "2023-12-02"
+  })
   .setGithubContext({
     payload: {
       pull_request: { number: 123 },
