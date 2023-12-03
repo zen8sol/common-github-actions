@@ -7,7 +7,7 @@
   "author": "Andrzej Wasiak",
   "license": "MIT",
   "scripts": {
-    "build": "rm -fr dist && bash ./node_modules/.bin/ncc build src/main.ts -o dist -m -C --license licenses.txt",
+    "build": "rm -fr dist && ./node_modules/.bin/ncc build src/main.ts -o dist -m -C --license licenses.txt",
     "test": "vitest --run"
   },
   "devDependencies": {
