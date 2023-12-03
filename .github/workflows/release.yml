@@ -38,7 +38,7 @@ jobs:
           git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git config --global user.name "GitHub Actions"
           git add ${{ env.PACKED_JS_PATH }}
-          git add dist/licences
+          git add dist/licenses.txt
           git add dist/package.json
           git commit -m "Pack with dependencies to ${{ env.PACKED_JS_PATH }}"
       - name: Push packed js
