@@ -34,7 +34,7 @@ const main = async () => {
 
     for (let i = changelogLines.length - 1; i >= 0; i--) {
       if (changelogLines[i].startsWith("[unreleased]")) {
-        let oldVersion = changelogLines[i + 2].split(" ", 1)[0].slice(1, -1);
+        let oldVersion = changelogLines[i + 1].split(" ", 1)[0].slice(3, -3); // **[0.1.0]**
         changelogLines[i] = [
           `[unreleased] https://github.com/${repository}/compare/${newVersionInput}...HEAD   `,
           `[${newVersionInput}] https://github.com/${repository}/compare/${oldVersion}...${newVersionInput}   `,
