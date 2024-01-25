@@ -5,7 +5,66 @@ import fs from "fs";
 import path from "path";
 
 function getFileLines(filePath: string): string[] {
+  if (!fs.existsSync(filePath)) {
+    throw new Error("File not exists: "+filePath);
+  }
   return fs.readFileSync(filePath).toString("utf-8").split("\n");
+}
+
+function genCompareRevLink(
+  repository: string,
+  oldRev: string | null,
+  newRev: string | "HEAD"
+): string {
+  const label = newRev === "HEAD" ? "[unreleased]" : `[${newRev}]`;
+  const linkType =
+    oldRev === null
+      ? `/releases/tag/${newRev}`
+      : `compare/${oldRev}...${newRev}`;
+  return `${label} https://github.com/${repository}/${linkType}   `;
+}
+
+function updateChangelogFooter(
+  changelogLines: string[],
+  repository: string,
+  newVersionInput: string
+) {
+  let foundOldVersion = false;
+  for (let i = changelogLines.length - 1; i >= 0; i--) {
+    if (changelogLines[i].startsWith("[unreleased]")) {
+      if (changelogLines.length < i + 1) {
+        throw new Error("`[unreleased]` line exists, but previous version line not"
+        );
+      }
+
+      const extractOldVersionRegex = /\[([0-9.]+)\]/;
+      // [0.1.0] ...
+      const oldVersionTagString = changelogLines[i + 1].split(" ", 1)[0];
+      const oldVersionMatch = oldVersionTagString.match(extractOldVersionRegex);
+
+      if (!oldVersionMatch) {
+        throw new Error("Invalid old version format: " + oldVersionTagString);
+      }
+
+      const oldVersion = oldVersionMatch[1];
+
+      changelogLines[i] = [
+        genCompareRevLink(repository, newVersionInput, "HEAD"),
+        genCompareRevLink(repository, oldVersion, newVersionInput),
+      ].join("\n");
+      foundOldVersion = true;
+      break;
+    }
+  }
+
+  if (!foundOldVersion) {
+    changelogLines.push(
+      [
+        genCompareRevLink(repository, newVersionInput, "HEAD"),
+        genCompareRevLink(repository, null, newVersionInput),
+      ].join("\n")
+    );
+  }
 }
 
 const main = async () => {
@@ -15,8 +74,12 @@ const main = async () => {
       "CHANGELOG.md"
     );
     const newVersionInput: string = getInput("newVersion");
-    const repository = context.payload.repository.owner.login+'/'+context.payload.repository.name;
-    const releaseDate:string = process.env.TODAY_DATE ?? LocalDate.now(ZoneOffset.UTC).toString();
+    const repository =
+      context.payload.repository.owner.login +
+      "/" +
+      context.payload.repository.name;
+    const releaseDate: string =
+      process.env.TODAY_DATE ?? LocalDate.now(ZoneOffset.UTC).toString();
 
     let changelogLines: string[] = getFileLines(changelogFilePath);
 
@@ -32,15 +95,7 @@ const main = async () => {
       }
     }
 
-    for (let i = changelogLines.length - 1; i >= 0; i--) {
-      if (changelogLines[i].startsWith("[unreleased]")) {
-        let oldVersion = changelogLines[i + 1].split(" ", 1)[0].slice(3, -3); // **[0.1.0]**
-        changelogLines[i] = [
-          `[unreleased] https://github.com/${repository}/compare/${newVersionInput}...HEAD   `,
-          `[${newVersionInput}] https://github.com/${repository}/compare/${oldVersion}...${newVersionInput}   `,
-        ].join("\n");
-      }
-    }
+    updateChangelogFooter(changelogLines, repository, newVersionInput);
 
     fs.writeFileSync(changelogFilePath, changelogLines.join("\n"));
   } catch (error) {
