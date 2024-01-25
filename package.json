@@ -8,9 +8,9 @@
   "license": "MIT",
   "scripts": {
     "build": "rm -fr dist && npm exec --package=@vercel/ncc -- ncc build -o dist -m -t --no-source-map-register -C --license licenses.txt src/index.ts",
-    "test": "vitest --run --single-thread",
+    "test": "bash -c \"if [[ $CI == 1 ]];then vitest --run --single-thread; else npm run test-local; fi\"",
     "test:update-snapshots": "npm run build && vitest --run --single-thread --update && rm -fr dist ",
-    "test-local": "npm run build && npm run test && rm -fr dist"
+    "test-local": "npm run build && vitest --run --single-thread && rm -fr dist"
   },
   "devDependencies": {
     "@types/node": "^20.10.0",
